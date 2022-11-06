@@ -1,3 +1,5 @@
+import 'package:currency_converter/add_workout_page.dart';
+import 'package:currency_converter/profile_page.dart';
 import 'package:currency_converter/workout_page.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,8 +16,11 @@ class _RootPageState extends State<RootPage> {
   final user = FirebaseAuth.instance.currentUser!;
 
   int currentPage = 0;
+
   final List<Widget> _pages = const [
     WorkoutPage(),
+    AddWorkoutPage(),
+    ProfilePage(),
   ];
 
   @override
@@ -65,7 +70,7 @@ class _RootPageState extends State<RootPage> {
       //     ],
       //   ),
       // ),
-      body: _pages[currentPage.clamp(0, _pages.length - 1)],
+      body: _pages[currentPage],
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,6 +14,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _emailTextController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _usernameTextController = TextEditingController();
 
   final _usernameKey = GlobalKey<FormState>();
   final _emailKey = GlobalKey<FormState>();
@@ -48,6 +50,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Form(
                     key: _usernameKey,
                     child: TextFormField(
+                      controller: _usernameTextController,
                       validator: (value) {
                         if (value == null ||
                             value.isEmpty ||
@@ -83,7 +86,6 @@ class _RegisterPageState extends State<RegisterPage> {
                         }
                       }),
                       controller: _emailTextController,
-                      obscureText: true,
                       decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.mail),
                         hintText: 'Email',
@@ -162,6 +164,17 @@ class _RegisterPageState extends State<RegisterPage> {
                           email: _emailTextController.text.trim(),
                           password: _passwordController.text.trim(),
                         );
+
+                        // Add a document for the users data in the database using their email
+                        FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(_emailTextController.text.trim())
+                            .set({
+                          "email": _emailTextController.text.trim(),
+                          "username": _usernameTextController.text.trim(),
+                          "joinDate": DateTime.now(),
+                          "workouts": {}
+                        });
 
                         // Then move them back to the login screen
                         Navigator.of(context).pop();
